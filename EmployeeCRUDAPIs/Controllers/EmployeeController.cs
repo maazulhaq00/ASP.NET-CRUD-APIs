@@ -52,5 +52,49 @@ namespace EmployeeCRUDAPIs.Controllers
 
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Employee>> UpdateEmployee([FromRoute] int id, [FromBody] Employee employee)
+        {
+            if (id != employee.EmpId)
+            {
+                return BadRequest();
+            }
+
+            context.Employees.Update(employee);
+            await context.SaveChangesAsync();
+
+            return Ok(employee);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Employee>> DeleteEmployee([FromRoute] int id)
+        {
+            var employee = await context.Employees.FindAsync(id);
+
+            if(employee == null)
+            {
+                return NotFound();
+            }
+
+            context.Employees.Remove(employee);
+            await context.SaveChangesAsync();
+
+            return Ok();
+
+        }
+        //[HttpGet]
+        //public async Task<ActionResult<List<Employee>>> GetEmployeesByName([FromQuery] string name)
+        //{
+        //    var employees = await context.Employees.Where(employee => employee.EmpName == name).ToListAsync();
+
+        //    if (employees == null || employees.Count == 0)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(employees);
+
+        //}
+
     }
 }
